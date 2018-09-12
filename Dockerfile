@@ -11,7 +11,7 @@ ARG GID=2001
 ARG UID=2000
 ARG GROUP=pg
 ARG USERNAME=pg
-RUN addgroup -g "${GID}" "${GROUP}" && adduser -G "${GROUP}" -u "${UID}" "${USERNAME}" \
+RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -G "${GROUP}" -u "${UID}" "${USERNAME}" \
     && chown -R "${USERNAME}:${GROUP}" "${PREFIX}"
 
 ARG DATA=/app/data
