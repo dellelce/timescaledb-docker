@@ -17,7 +17,7 @@ RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
     -g "PostGreSQL user" \
     -G "${GROUP}" -u "${UID}" \
     "${USERNAME}" \
-    && chown -R "${USERNAME}:${GROUP}" "${PREFIX}" && \
+    && chown -R "${USERNAME}:${GROUP}" "${PREFIX}" \
     && mkdir "${DATA}" && chown "${USERNAME}" "${DATA}"
 
 USER ${USERNAME}
