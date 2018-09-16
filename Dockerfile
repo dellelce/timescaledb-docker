@@ -15,13 +15,15 @@ ARG DATA=/app/data
 ARG PGPORT=5432
 ARG PGHOME=/home/${USERNAME}
 
+ENV ENV   $PGHOME/.profile
+
 RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
     -g "PostGreSQL user" \
     -G "${GROUP}" -u "${UID}" \
     "${USERNAME}" \
     && chown -R "${USERNAME}:${GROUP}" "${PREFIX}" \
     && mkdir "${DATA}" && chown "${USERNAME}" "${DATA}" \
-    && echo 'export PATH="${PREFIX}/bin:$PATH"' >> "${PGHOME}"/.profile
+    && echo 'export PATH="'${PREFIX}'/bin:$PATH"' >> ${PGHOME}/.profile
 
 USER ${USERNAME}
 
