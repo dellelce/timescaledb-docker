@@ -11,7 +11,7 @@ ARG GID=2001
 ARG UID=2000
 ARG GROUP=pg
 ARG USERNAME=pg
-ARG DATA=/app/data
+ARG DATA=/app/data/${USERNAME}
 ARG PGPORT=5432
 ARG PGHOME=/home/${USERNAME}
 
@@ -22,7 +22,7 @@ RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
     -G "${GROUP}" -u "${UID}" \
     "${USERNAME}" \
     && chown -R "${USERNAME}:${GROUP}" "${PREFIX}" \
-    && mkdir "${DATA}" && chown "${USERNAME}" "${DATA}" \
+    && mkdir -p "${DATA}" && chown "${USERNAME}":"${GROUP}" "${DATA}" \
     && echo 'export PATH="'${PREFIX}'/bin:$PATH"' >> ${PGHOME}/.profile
 
 USER ${USERNAME}
@@ -32,5 +32,3 @@ ENV PGDATA  ${DATA}
 
 EXPOSE ${PGPORT}:${PGPORT}
 
-#WORKDIR ${INSTALLDIR}
-#COPY --from=build ${INSTALLDIR} .
