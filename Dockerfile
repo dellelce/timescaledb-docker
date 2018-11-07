@@ -17,6 +17,8 @@ ARG PGHOME=/home/${USERNAME}
 
 ENV ENV   $PGHOME/.profile
 
+RUN rm -rf ${PREFIX}/share/terminfo ${PREFIX}/include
+
 RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
     -g "PostGreSQL user" \
     -G "${GROUP}" -u "${UID}" \
