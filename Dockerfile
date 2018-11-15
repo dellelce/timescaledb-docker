@@ -27,10 +27,11 @@ RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
     && mkdir -p "${DATA}" && chown "${USERNAME}":"${GROUP}" "${DATA}" \
     && echo 'export PATH="'${PREFIX}'/bin:$PATH"' >> ${PGHOME}/.profile
 
-USER ${USERNAME}
 
 VOLUME ${DATA}
 ENV PGDATA  ${DATA}
+
+USER ${USERNAME}
 
 EXPOSE ${PGPORT}:${PGPORT}
 
