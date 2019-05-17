@@ -16,6 +16,7 @@ ARG PGPORT=5432
 ARG PGHOME=/home/${USERNAME}
 
 ENV ENV   $PGHOME/.profile
+ENV LANG  en_GB.utf8
 
 RUN rm -rf ${PREFIX}/share/terminfo ${PREFIX}/include
 
@@ -31,7 +32,5 @@ RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
 VOLUME ${DATA}
 ENV PGDATA  ${DATA}
 
-USER ${USERNAME}
-
-EXPOSE ${PGPORT}:${PGPORT}
+EXPOSE ${PGPORT}
 
