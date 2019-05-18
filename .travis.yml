@@ -4,6 +4,6 @@ notifications:
 services:
  - docker
 env:
- - BASE_IMAGE="dellelce/pgbase" TARGET_IMAGE="dellelce/timescaledb" PREFIX="/app/pg"
+ - BASE_IMAGE="dellelce/timescaledb-base" TARGET_IMAGE="dellelce/timescaledb" PREFIX="/app/pg"
 script: 
  - ./main.sh
