@@ -1,4 +1,4 @@
-ARG BASE=dellelce/pgbase
+ARG BASE=dellelce/timescaledb-base
 FROM $BASE as build
 
 LABEL maintainer="Antonio Dell'Elce"
@@ -21,7 +21,7 @@ ENV LANG  en_GB.utf8
 RUN rm -rf ${PREFIX}/share/terminfo ${PREFIX}/include
 
 RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
-    -g "PostGreSQL user" \
+    -g "TimescaleDB user" \
     -G "${GROUP}" -u "${UID}" \
     "${USERNAME}" \
     && chown -R "${USERNAME}:${GROUP}" "${PREFIX}" \
