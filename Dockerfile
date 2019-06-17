@@ -19,8 +19,9 @@ ARG PGHOME=/home/${USERNAME}
 ENV ENV   $PGHOME/.profile
 ENV LANG  en_GB.utf8
 
-# The base image is built from source via mkit
-RUN rm -rf ${PREFIX}/share/terminfo ${PREFIX}/include
+# Remove unneeded base package build-related files & add replacement su
+RUN rm -rf ${PREFIX}/share/terminfo ${PREFIX}/include && \
+    apk add --no-cache su-exec pwgen
 
 RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
              -g "Database user" \
@@ -30,10 +31,15 @@ RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
  && mkdir -p "${DATA}" && chown "${USERNAME}":"${GROUP}" "${DATA}" \
  && echo 'export PATH="'${PREFIX}'/bin:$PATH"' >> ${PGHOME}/.profile
 
-
 VOLUME ${DATA}
 ENV PGDATA  ${DATA}
 
+COPY docker-entrypoint.sh "${PREFIX}/bin"
+# list of extensions to enabled, to be processed by docker-entrypoint.sh
+COPY extensions.txt /tmp/
+
 EXPOSE ${PGPORT}
 
-CMD ["postgres"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+#CMD ["postgres"]
