@@ -20,7 +20,8 @@ ENV ENV   $PGHOME/.profile
 ENV LANG  en_GB.utf8
 
 # Remove unneeded base package build-related files & add replacement su
-RUN rm -rf ${PREFIX}/share/terminfo ${PREFIX}/include && \
+# Note: terminfo needed if accessing the docker instance interactively
+RUN rm  ${PREFIX}/include && \
     apk add --no-cache su-exec pwgen
 
 RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
