@@ -39,7 +39,9 @@ pg_setup()
 
  su-exec $POSTGRES_USER initdb -D "$PGDATA" \
                                --username="$INTERNAL_USER" \
-                               --pwfile=$pwfile || return $?
+                               --pwfile=$PWFILE || return $?
+
+ rm "$PWFILE"
 
  su-exec $POSTGRES_USER pg_ctl -D "$PGDATA" \
                                -o "-c listen_addresses=''" \
