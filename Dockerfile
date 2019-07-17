@@ -32,10 +32,10 @@ RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
  && mkdir -p "${DATA}" && chown "${USERNAME}":"${GROUP}" "${DATA}" \
  && echo 'export PATH="'${PREFIX}'/bin:$PATH"' >> ${PGHOME}/.profile
 
-# ..
 RUN sample="${PREFIX}/share/postgresql/postgresql.conf.sample" && \
     extensions="timescaledb" && \
     sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" ${sample} && \
+    # Setup all extensions
     sed -ri "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = '"${extensions}",\2'/;s/,'/'/"  ${sample} && \
     echo "${extensions}" > /tmp/extensions.txt
 
