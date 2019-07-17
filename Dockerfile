@@ -21,7 +21,7 @@ ENV LANG  en_GB.utf8
 
 # Remove unneeded base package build-related files & add replacement su
 # Note: terminfo needed if accessing the docker instance interactively
-RUN rm  ${PREFIX}/include && \
+RUN rm  -rf ${PREFIX}/include && \
     apk add --no-cache su-exec pwgen
 
 RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
@@ -32,12 +32,17 @@ RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
  && mkdir -p "${DATA}" && chown "${USERNAME}":"${GROUP}" "${DATA}" \
  && echo 'export PATH="'${PREFIX}'/bin:$PATH"' >> ${PGHOME}/.profile
 
+# ..
+RUN sample="${PREFIX}/share/postgresql/postgresql.conf.sample" && \
+    extensions="timescaledb" && \
+    sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" ${sample} && \
+    sed -ri "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = '"${extensions}",\2'/;s/,'/'/"  ${sample} && \
+    echo "${extensions}" > /tmp/extensions.txt
+
 VOLUME ${DATA}
 ENV PGDATA  ${DATA}
 
 COPY docker-entrypoint.sh "${PREFIX}/bin"
-# list of extensions to enabled, to be processed by docker-entrypoint.sh
-COPY extensions.txt /tmp/
 
 EXPOSE ${PGPORT}
 

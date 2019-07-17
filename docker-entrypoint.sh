@@ -47,8 +47,22 @@ pg_setup()
                                -o "-c listen_addresses=''" \
                                -w start || return $?
 
- # WIP: add extensions
- ls -lt ${PGDATA}/postgresql.conf
+ # setup extensions if any
+
+ [ -f "/tmp/extensions.txt" ] &&
+ {
+  extensions=$(cat /tmp/extensions.txt )
+  databases="postgres template1"
+  for database in $databases
+  do
+   {
+    for extension in $extensions
+    do
+      echo "CREATE EXTENSION IF NOT EXISTS $extension CASCADE;"  | psql -U "${INTERNAL_USER}" ${database} 2>&1
+    done
+   }
+  done
+ }
 
  # additional setup to be added here
  su-exec $POSTGRES_USER pg_ctl -D "$PGDATA" -m fast -w stop
@@ -58,4 +72,4 @@ pg_setup()
 
 [ ! -e "${PGDATA}/PG_VERSION" ] && pg_setup || exit $?
 
-su-exec pg postgres $*
+su-exec ${POSTGRES_USER} postgres $*
