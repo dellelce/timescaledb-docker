@@ -32,7 +32,7 @@
 ### MAIN ###
 
  main_version=$(
-     docker run --rm $BASE_IMAGE sh -c '${INSTALLDIR}/bin/postgres -V'
+     docker run --rm $BASE_IMAGE sh -c '${INSTALLDIR}/bin/postgres -V' | awk ' { print $3 } '
 )
 
  # find timescaledb version from its shared library filename
