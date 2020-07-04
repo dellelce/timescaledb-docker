@@ -15,6 +15,7 @@
   [ -z "$DOCKER_PASSWORD" -o -z "$DOCKER_USERNAME" ] && { echo "docker_hub: Docker environment not set-up correctly"; return 1; }
   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   rc=$?
+
   [ $rc -ne 0 ] && { echo "docker_hub: Docker hub login failed with rc = $rc"; return $rc; }
 
   [ ! -z "$target" ] && { docker push "$target"; return $?; }
@@ -30,7 +31,17 @@
 
 ### MAIN ###
 
- docker build -t "$image" --build-arg BASE=$BASE_IMAGE --build-arg PREFIX=$prefix .
+ main_version=$(
+     docker run --rm $BASE_IMAGE sh -c '${INSTALLDIR}/bin/postgres -V'
+)
+
+ # find timescaledb version from its shared library filename
+ ts_version=$(
+     docker run --rm $BASE_IMAGE sh -c 'find ${INSTALLDIR} -name "timescale*[1-9]*so" -a \! -name "*tsl*" -type f'  | awk -F- ' { gsub (/\.so$/, "");print $2 } '
+)
+
+ docker build -t "$image" -t "$image:$main_version"  -t "$image:${main_version}_${ts_version}" \
+               --build-arg BASE=$BASE_IMAGE --build-arg PREFIX=$prefix .
  build_rc="$?"
  [ $build_rc -eq 0 -a ! -z "$image" ] && { docker_hub "$image"; exit $?; }
  exit $build_rc
