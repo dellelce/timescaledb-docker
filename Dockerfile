@@ -4,7 +4,7 @@ FROM $BASE as build
 
 LABEL maintainer="Antonio Dell'Elce"
 
-ARG PREFIX=/app/pg
+ARG PREFIX="/app/pg"
 ENV INSTALLDIR  ${PREFIX}
 
 # commands are intended for busybox: if BASE is changed to non-BusyBox these may fail!
@@ -47,5 +47,3 @@ COPY docker-entrypoint.sh "${PREFIX}/bin"
 EXPOSE ${PGPORT}
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-
-#CMD ["postgres"]
