@@ -5,5 +5,5 @@ services:
  - docker
 env:
  - BASE_IMAGE="dellelce/timescaledb-base" TARGET_IMAGE="dellelce/timescaledb" PREFIX="/app/pg"
-script: 
+script:
  - ./main.sh

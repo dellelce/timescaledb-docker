@@ -1,9 +1,9 @@
-# my "official" postgresql docker environment
+# My "official" postgresql docker environment
 
-This docker has:
+This docker image has:
 
-* Alpine 3.8
-* PostgreSQL (latest)
+* Alpine 3.8 base image
+* PostgreSQL (latest non-beta version available)
 * TimescaleDB (latest)
 
 The base image is built with my [mkit](http://github.com/dellelce/mkit) build tool.
