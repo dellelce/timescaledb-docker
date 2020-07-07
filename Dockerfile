@@ -24,6 +24,8 @@ ENV LANG  en_GB.utf8
 RUN rm  -rf ${PREFIX}/include && \
     apk add --no-cache su-exec pwgen
 
+VOLUME ${DATA}
+
 RUN addgroup -g "${GID}" "${GROUP}" && adduser -D -s /bin/sh \
              -g "Database user" \
              -G "${GROUP}" -u "${UID}" \
@@ -39,7 +41,6 @@ RUN sample="${PREFIX}/share/postgresql/postgresql.conf.sample" && \
     sed -ri "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = '"${extensions}",\2'/;s/,'/'/"  ${sample} && \
     echo "${extensions}" > /tmp/extensions.txt
 
-VOLUME ${DATA}
 ENV PGDATA  ${DATA}
 
 COPY docker-entrypoint.sh "${PREFIX}/bin"
