@@ -17,8 +17,10 @@ pg_setup()
  local INTERNAL_USER="postgres"
  local PWFILE="pw.${RANDOM}${RANDOM}"
 
- ls -ltd "${PGDATA}"
  chmod 750 ${PGDATA}
+ chown "${POSTGRES_USER}" "${PGDATA}"
+
+ ls -ltd "${PGDATA}"
 
  # print the password to the "log" if we need to generate it and there is nowhere else to write
  [ -z "$POSTGRES_PASSWORD" ] &&
