@@ -12,6 +12,11 @@ generate_password()
  pwgen -ysc -r "\`" 16 1
 }
 
+hba_setup()
+{
+ echo "host all all all md5" >> ${PGDATA}/pg_hba.conf
+}
+
 pg_setup()
 {
  local INTERNAL_USER="postgres"
@@ -45,6 +50,8 @@ pg_setup()
                                --pwfile=$PWFILE || return $?
 
  rm "$PWFILE"
+
+ hba_setup || return $?
 
  su-exec $POSTGRES_USER pg_ctl -D "$PGDATA" \
                                -o "-c listen_addresses=''" \
